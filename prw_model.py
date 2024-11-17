@@ -1,24 +1,11 @@
-from sqlalchemy.orm import registry
-from sqlmodel import Field, SQLModel, Relationship
+from sqlmodel import Field, Relationship
 from typing import List
-from datetime import datetime, date, time
+from datetime import date, time
+from .prw_meta_model import PrwMetaModel, PrwMeta, PrwSourcesMeta
 
 
-class PrwModel(SQLModel, registry=registry()):
+class PrwModel(PrwMetaModel):
     pass
-
-
-class PrwMeta(PrwModel, table=True):
-    __tablename__ = "prw_meta"
-    id: int | None = Field(default=None, primary_key=True)
-    modified: datetime
-
-
-class PrwSourcesMeta(PrwModel, table=True):
-    __tablename__ = "prw_sources_meta"
-    id: int | None = Field(default=None, primary_key=True)
-    filename: str = Field(unique=True)
-    modified: datetime
 
 
 class PrwPatient(PrwModel, table=True):
