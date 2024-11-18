@@ -1,10 +1,11 @@
-from sqlmodel import Field, Relationship
 from typing import List
 from datetime import date, time
+from sqlalchemy.orm import registry
+from sqlmodel import Field, Relationship
 from .prw_meta_model import PrwMetaModel, PrwMeta, PrwSourcesMeta
 
 
-class PrwModel(PrwMetaModel):
+class PrwModel(PrwMetaModel, registry=registry()):
     pass
 
 
