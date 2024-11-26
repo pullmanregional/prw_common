@@ -10,11 +10,12 @@ class PrwMetaModel(SQLModel, registry=registry()):
 class PrwMeta(PrwMetaModel, table=True):
     __tablename__ = "prw_meta"
     id: int | None = Field(default=None, primary_key=True)
+    dataset: str = Field(unique=True, max_length=1024, index=True)
     modified: datetime
 
 
 class PrwSourcesMeta(PrwMetaModel, table=True):
     __tablename__ = "prw_sources_meta"
     id: int | None = Field(default=None, primary_key=True)
-    source: str = Field(unique=True)
+    source: str = Field(unique=True, max_length=1024, index=True)
     modified: datetime

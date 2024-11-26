@@ -14,7 +14,10 @@ class PrwPatient(PrwModel, table=True):
 
     id: int | None = Field(default=None, primary_key=True)
     prw_id: str = Field(
-        unique=True, max_length=24, description="ID hash from unique salt and row ID"
+        unique=True,
+        index=True,
+        max_length=24,
+        description="ID hash from unique salt and row ID",
     )
     sex: str = Field(regex="^[MFO]$")
     age: int | None = Field(description="Age in years")
@@ -30,11 +33,13 @@ class PrwEncounter(PrwModel, table=True):
     __tablename__ = "prw_encounters"
 
     id: int | None = Field(default=None, primary_key=True)
-    prw_id: str = Field(foreign_key="prw_patients.prw_id")
+    prw_id: str = Field(max_length=24, foreign_key="prw_patients.prw_id")
     location: str
     dept: str
     encounter_date: date
     encounter_time: time
+    encounter_age: int | None = Field(description="Age in years at encounter")
+    encounter_age_mo: int | None = Field(description="Age in months at encounter if <2yo")
     encounter_type: str
     service_provider: str | None = None
     billing_provider: str | None = None

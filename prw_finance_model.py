@@ -36,7 +36,7 @@ class PrwBudget(PrwFinanceModel, table=True):
     dept_name: Optional[str] = None
     budget_fte: float
     budget_prod_hrs: float
-    budget_volume: int
+    budget_volume: float
     budget_uos: float
     budget_prod_hrs_per_uos: float
     hourly_rate: float

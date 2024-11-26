@@ -15,8 +15,8 @@ class PrwId(PrwIdModel, table=True):
 
     __tablename__ = "prw_ids"
     id: int | None = Field(default=None, primary_key=True)
-    prw_id: str = Field(unique=True, max_length=24)
-    mrn: int = Field(unique=True)
+    prw_id: str = Field(unique=True, index=True, max_length=24)
+    mrn: int = Field(unique=True, index=True)
     details: List["PrwIdDetails"] = Relationship(back_populates="prw_id_ref")
 
 
