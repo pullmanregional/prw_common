@@ -23,7 +23,7 @@ class PrwId(PrwIdModel, table=True):
 class PrwIdDetails(PrwIdModel, table=True):
     __tablename__ = "prw_id_details"
     id: int | None = Field(default=None, primary_key=True)
-    prw_id: str = Field(foreign_key="prw_ids.prw_id")
+    prw_id: str = Field(foreign_key="prw_ids.prw_id", max_length=24)
     mrn: str = Field(unique=True, index=True, max_length=24)
     name: str | None = None
     dob: date | None = None
