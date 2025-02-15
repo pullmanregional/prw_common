@@ -17,7 +17,6 @@ class PrwId(PrwIdModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     prw_id: str = Field(unique=True, index=True, max_length=24)
     mrn: str = Field(unique=True, index=True, max_length=24)
-    details: List["PrwIdDetails"] = Relationship(back_populates="prw_id_ref")
 
 
 class PrwIdDetails(PrwIdModel, table=True):
@@ -33,8 +32,3 @@ class PrwIdDetails(PrwIdModel, table=True):
     zip: str | None = None
     phone: str | None = None
     email: str | None = None
-
-    prw_id_ref: PrwId = Relationship(
-        back_populates="details",
-        sa_relationship_kwargs={"foreign_keys": "[PrwIdDetails.prw_id]"}
-    )
