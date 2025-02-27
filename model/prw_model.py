@@ -1,5 +1,5 @@
 from typing import List
-from datetime import date, time
+from datetime import datetime, time
 from sqlalchemy.orm import registry
 from sqlmodel import Field, Relationship
 from .prw_meta_model import PrwMetaModel, PrwMeta, PrwSourcesMeta
@@ -34,7 +34,7 @@ class PrwEncounter(PrwModel, table=True):
     prw_id: str = Field(max_length=24)
     location: str
     dept: str
-    encounter_date: date
+    encounter_date: datetime
     encounter_time: time
     encounter_age: int | None = Field(description="Age in years at encounter")
     encounter_age_in_mo_under_3: int | None = Field(
