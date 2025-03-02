@@ -32,7 +32,6 @@ class PrwEncounter(PrwModel, table=True):
 
     id: int | None = Field(default=None, primary_key=True)
     prw_id: str = Field(max_length=24)
-    location: str
     dept: str
     encounter_date: datetime
     encounter_time: time
