@@ -5,7 +5,7 @@ import time
 from datetime import datetime
 from dataclasses import dataclass
 from typing import List
-from sqlmodel import SQLModel, Session, create_engine, delete
+from sqlmodel import SQLModel, Session, create_engine, delete, select
 from sqlalchemy import inspect
 
 
@@ -178,8 +178,11 @@ def write_meta(session: Session, meta_table: SQLModel):
     """
     logging.info("Writing metadata")
 
-    # Clear and reset last ingest time
-    inspector = inspect(session.bind)
-    if inspector.has_table(meta_table.__tablename__):
-        session.exec(delete(meta_table))
-    session.add(meta_table(modified=datetime.now()))
+    # Store now as the last ingest time, replacing existing record if exists
+    stmt = select(meta_table)
+    existing = session.exec(stmt).first()
+    if existing:
+        existing.modified = datetime.now()
+    else:
+        meta = meta_table(modified=datetime.now())
+        session.add(meta)
