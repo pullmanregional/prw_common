@@ -34,7 +34,7 @@ class PrwEncounter(PrwModel, table=True):
     prw_id: str = Field(max_length=24)
     dept: str
     encounter_date: datetime
-    encounter_time: time
+    encounter_time: str = Field(max_length=4)
     encounter_age: int | None = Field(description="Age in years at encounter")
     encounter_age_in_mo_under_3: int | None = Field(
         description="Age in months at encounter if <3yo"
