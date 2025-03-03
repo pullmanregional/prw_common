@@ -168,3 +168,18 @@ def _convert_df_dtypes_to_db(table_data: TableData, table_columns: List[str]):
                 )
                 # Can use .copy() to avoid SettingWithCopyWarning
                 df[col] = df[col].astype(target_dtype, copy=False)
+
+
+def write_meta(session: Session, meta_table: SQLModel):
+    """
+    Populate the meta table with last modified time. prw-warehouse ingest has a 
+    different version specific for the PRW schema which includes tables prw_meta and 
+    prw_sources_meta
+    """
+    logging.info("Writing metadata")
+
+    # Clear and reset last ingest time
+    inspector = inspect(session.bind)
+    if inspector.has_table(meta_table.__tablename__):
+        session.exec(delete(meta_table))
+    session.add(meta_table(modified=datetime.now()))
