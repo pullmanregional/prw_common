@@ -62,10 +62,6 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    if not os.path.exists(args.file):
-        print(f"File not found: {args.file}")
-        sys.exit(1)
-
     # Use provided key or generate new one
     if args.key:
         key = args.key
@@ -73,6 +69,10 @@ if __name__ == "__main__":
     else:
         key = Fernet.generate_key().decode("utf-8")
         print(f"Using generated key: {key}")
+
+    if not os.path.exists(args.file):
+        print(f"File not found: {args.file}")
+        sys.exit(1)
 
     # Handle encryption
     if not args.decrypt:
