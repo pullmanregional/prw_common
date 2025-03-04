@@ -29,7 +29,7 @@ def mask_conn_pw(conn_str: str) -> str:
 
 
 def get_db_connection(
-    conn_str: str, echo: bool = False, max_retries: int = 3, retry_delay: int = 5
+    conn_str: str, echo: bool = False, max_retries: int = 3, retry_delay: int = 10
 ) -> sqlalchemy.Engine:
     """
     Given an ODBC connection string, return a connection to the DB via SQLModel
@@ -57,6 +57,9 @@ def get_db_connection(
                 engine = create_engine(conn_str, echo=echo, fast_executemany=True)
             else:
                 engine = create_engine(conn_str, echo=echo)
+            
+            # Validate by initiating connection
+            engine.connect().close()
             return engine
         except Exception as e:
             retries += 1
