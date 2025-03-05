@@ -25,8 +25,6 @@ class PrwPatient(PrwModel, table=True):
     city: str | None = None
     state: str | None = None
     pcp: str | None = None
-    mychart_status: str | None = None
-    mychart_activation_date: int | None = None
 
 
 class PrwEncounter(PrwModel, table=True):
