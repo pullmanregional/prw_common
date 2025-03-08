@@ -21,3 +21,4 @@ class PrwPatientPanel(PrwPanelModel, table=True):
     )
     panel_location: str | None = None
     panel_provider: str | None = None
+    assignment_details: str | None = None
