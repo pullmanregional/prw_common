@@ -49,6 +49,7 @@ class PrwEncounter(PrwModel, table=True):
     with_pcp: bool | None = None
     appt_status: str | None = None
     diagnoses: str | None = None
+    diagnoses_icd: str | None = None
     level_of_service: str | None = None
 
 
