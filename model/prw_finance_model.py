@@ -34,6 +34,7 @@ class PrwBudget(PrwFinanceModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     dept_wd_id: str = Field(max_length=10)
     dept_name: Optional[str] = None
+    year: int
     budget_fte: float
     budget_prod_hrs: float
     budget_volume: float
