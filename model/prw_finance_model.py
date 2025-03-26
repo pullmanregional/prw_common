@@ -37,6 +37,7 @@ class PrwBudget(PrwFinanceModel, table=True):
     year: int
     budget_fte: float
     budget_prod_hrs: float
+    budget_contracted_hours: float
     budget_volume: float
     budget_uos: float
     budget_prod_hrs_per_uos: float
