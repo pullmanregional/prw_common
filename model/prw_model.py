@@ -26,6 +26,8 @@ class PrwPatient(PrwModel, table=True):
     state: str | None = None
     pcp: str | None = None
 
+    allergy: str | None = None
+
 
 class PrwEncounter(PrwModel, table=True):
     __tablename__ = "prw_encounters"
