@@ -29,15 +29,13 @@ class PrwPatient(PrwModel, table=True):
     allergy: str | None = None
 
 
-class PrwEncounter(PrwModel, table=True):
-    __tablename__ = "prw_encounters"
+class PrwEncounterOutpt(PrwModel, table=True):
+    __tablename__ = "prw_encounters_outpt"
 
     id: int | None = Field(default=None, primary_key=True)
     prw_id: str = Field(index=True, max_length=24)
     dept: str
-    encounter_date: int = Field(
-        description="Date of encounter in YYYYMMDD format as an integer"
-    )
+    encounter_date: datetime
     encounter_time: str = Field(
         max_length=4, description="Time of encounter as HHSS in 24-hour format"
     )
@@ -61,4 +59,4 @@ class PrwMyChart(PrwModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     prw_id: str = Field(unique=True, index=True, max_length=24)
     mychart_status: str | None = None
-    mychart_activation_date: int | None = Field(description="Int in YYYYMMDD format")
+    mychart_activation_date: datetime | None

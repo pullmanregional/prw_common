@@ -1,7 +1,7 @@
 from sqlalchemy.orm import registry
 from typing import List
 from sqlmodel import Field, SQLModel, Relationship
-from datetime import date
+from datetime import datetime
 
 
 class PrwIdModel(SQLModel, registry=registry()):
@@ -25,7 +25,7 @@ class PrwIdDetails(PrwIdModel, table=True):
     prw_id: str = Field(unique=True, index=True, max_length=24)
     mrn: str = Field(unique=True, index=True, max_length=24)
     name: str | None = None
-    dob: int | None = Field(description="Date of birth in YYYYMMDD format as an integer")
+    dob: datetime | None = None
     address: str | None = None
     city: str | None = None
     state: str | None = None
