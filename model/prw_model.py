@@ -53,6 +53,40 @@ class PrwEncounterOutpt(PrwModel, table=True):
     level_of_service: str | None = None
 
 
+class PrwNotesInpt(PrwModel, table=True):
+    __tablename__ = "prw_notes_inpt"
+
+    id: int | None = Field(default=None, primary_key=True)
+    prw_id: str = Field(index=True, max_length=24)
+
+    service_date: datetime | None = None
+    dept: str | None = None
+    service: str | None = None
+    note_type: str | None = None
+    diagnosis: str | None = None
+    author_name: str | None = None
+    author_type: str | None = None
+    first_author_name: str | None = None
+    cosigner_name: str | None = None
+
+
+class PrwNotesEd(PrwModel, table=True):
+    __tablename__ = "prw_notes_ed"
+
+    id: int | None = Field(default=None, primary_key=True)
+    prw_id: str = Field(index=True, max_length=24)
+
+    service_date: datetime | None = None
+    dept: str | None = None
+    service: str | None = None
+    note_type: str | None = None
+    diagnosis: str | None = None
+    author_name: str | None = None
+    author_type: str | None = None
+    first_author_name: str | None = None
+    cosigner_name: str | None = None
+
+
 class PrwMyChart(PrwModel, table=True):
     __tablename__ = "prw_mychart"
 
