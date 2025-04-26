@@ -60,6 +60,9 @@ class PrwNotesInpt(PrwModel, table=True):
     prw_id: str = Field(index=True, max_length=24)
 
     service_date: datetime | None = None
+    encounter_age: int | None = Field(
+        description="Age in years at service date of note"
+    )
     dept: str | None = None
     service: str | None = None
     note_type: str | None = None
@@ -77,6 +80,9 @@ class PrwNotesEd(PrwModel, table=True):
     prw_id: str = Field(index=True, max_length=24)
 
     service_date: datetime | None = None
+    encounter_age: int | None = Field(
+        description="Age in years at service date of note"
+    )
     dept: str | None = None
     service: str | None = None
     note_type: str | None = None
