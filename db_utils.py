@@ -1,4 +1,4 @@
-import re, urllib, logging
+import json, re, urllib, logging
 import pandas as pd
 import sqlalchemy
 import time
@@ -57,7 +57,7 @@ def get_db_connection(
                 engine = create_engine(conn_str, echo=echo, fast_executemany=True)
             else:
                 engine = create_engine(conn_str, echo=echo)
-            
+
             # Validate by initiating connection
             engine.connect().close()
             return engine
@@ -173,10 +173,19 @@ def _convert_df_dtypes_to_db(table_data: TableData, table_columns: List[str]):
                 df[col] = df[col].astype(target_dtype, copy=False)
 
 
+def write_kv_table(kv_data: dict, session: Session, kv_table: SQLModel):
+    """
+    Serialize and write an object to a table that contains a single row with 1 JSON column
+    """
+    json_str = json.dumps(kv_data, indent=2)
+    session.exec(delete(kv_table))
+    session.add(kv_table(data=json_str))
+
+
 def write_meta(session: Session, meta_table: SQLModel):
     """
-    Populate the meta table with last modified time. prw-warehouse ingest has a 
-    different version specific for the PRW schema which includes tables prw_meta and 
+    Populate the meta table with last modified time. prw-warehouse ingest has a
+    different version specific for the PRW schema which includes tables prw_meta and
     prw_sources_meta
     """
     logging.info("Writing metadata")
