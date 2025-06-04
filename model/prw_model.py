@@ -2,6 +2,7 @@ from typing import List
 from datetime import datetime, time
 from sqlalchemy.orm import registry
 from sqlmodel import Field, Relationship
+from sqlalchemy import BigInteger
 from .prw_meta_model import PrwMetaModel, PrwMeta, PrwSourcesMeta
 
 
@@ -100,3 +101,27 @@ class PrwMyChart(PrwModel, table=True):
     prw_id: str = Field(unique=True, index=True, max_length=24)
     mychart_status: str | None = None
     mychart_activation_date: datetime | None
+
+
+class PrwCharges(PrwModel, table=True):
+    __tablename__ = "prw_charges"
+    id: int = Field(
+        primary_key=True,
+        sa_type=BigInteger,
+        description="Equal to BillingTransactionFact.BillingTransactionKey",
+    )
+    prw_id: str | None = Field(index=True, max_length=24)
+    service_date: datetime | None = None
+    post_date: datetime | None = None
+    billing_provider: str | None = None
+    procedure_code: str | None = None
+    modifiers: str | None = None
+    procedure_desc: str | None = None
+    rev_code: str | None = None
+    rev_code_desc: str | None = None
+    wrvu: float | None = None
+    reversal_reason: str | None = None
+    charge_amount: float | None = None
+    primary_payor_class: str | None = None
+    dept: str | None = None
+    location: str | None = None

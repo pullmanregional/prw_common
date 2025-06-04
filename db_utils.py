@@ -105,25 +105,17 @@ def clear_tables_and_insert_data(
                 f"WARN: failed to clear table: {table_data.table.__tablename__}", e
             )
 
-        # Select columns from dataframe that match table columns
-        table_columns = table_data.table.__table__.columns.keys()
+        # Prepare dataframe for DB by keeping shared columns and converting dtypes
+        df = _prepare_df_for_insert(table_data)
 
-        # Remove columns that aren't in the dataframe
-        table_columns = [col for col in table_columns if col in table_data.df.columns]
-
-        # Remove the PK column from the dataframe, which will be computed by the DB
-        if table_data.table.__table__.primary_key.columns.keys()[0] in table_columns:
-            table_columns.remove(
-                table_data.table.__table__.primary_key.columns.keys()[0]
-            )
-
-        # Convert dataframe datatypes to match DB types
-        _convert_df_dtypes_to_db(table_data, table_columns)
+        # Remove the PK column for insert operations, which will be computed by the DB
+        pk_col = table_data.table.__table__.primary_key.columns.keys()[0]
+        if pk_col in df.columns:
+            df = df.drop(columns=[pk_col])
 
         # Write data from dataframe
         start_time = time.time()
         logging.info(f"Writing table: {table_data.table.__tablename__}")
-        df = table_data.df[table_columns]
         df.to_sql(
             name=table_data.table.__tablename__,
             con=session.connection(),
@@ -135,6 +127,84 @@ def clear_tables_and_insert_data(
         logging.info(
             f"Wrote {len(df)} rows to {table_data.table.__tablename__} in {elapsed_time:.2f}s"
         )
+
+
+def upsert_data(
+    session: Session, tables_data: List[TableData], chunk_size: int = 100000
+):
+    """
+    Write data from dataframes to DB tables, updating existing rows and inserting new ones.
+    Uses to_sql for inserts and bulk_update_mappings for updates.
+    """
+    for table_data in tables_data:
+        logging.info(
+            f"Upserting data to table: {table_data.table.__tablename__}, rows: {len(table_data.df)}"
+        )
+
+        # Prepare dataframe for DB by keeping shared columns and converting dtypes
+        df = _prepare_df_for_insert(table_data)
+
+        # Get primary key column
+        pk_col = table_data.table.__table__.primary_key.columns.keys()[0]
+
+        # Write data from dataframe
+        start_time = time.time()
+        logging.info(f"Upserting table: {table_data.table.__tablename__}")
+
+        # Process in chunks to avoid memory issues
+        for i in range(0, len(df), chunk_size):
+            chunk = df.iloc[i : i + chunk_size]
+
+            # Get existing records by primary key
+            existing_pks = session.exec(
+                select(getattr(table_data.table, pk_col)).where(
+                    getattr(table_data.table, pk_col).in_(chunk[pk_col].tolist())
+                )
+            ).all()
+
+            # Split into inserts and updates
+            to_insert = chunk[~chunk[pk_col].isin(existing_pks)]
+            to_update = chunk[chunk[pk_col].isin(existing_pks)]
+
+            # Insert new records using pandas
+            if not to_insert.empty:
+                to_insert.to_sql(
+                    name=table_data.table.__tablename__,
+                    con=session.connection(),
+                    if_exists="append",
+                    index=False,
+                )
+
+            # Bulk update existing records with sqlalchemy
+            if not to_update.empty:
+                session.bulk_update_mappings(
+                    table_data.table, to_update.to_dict("records")
+                )
+
+            # Commit each chunk
+            session.commit()
+
+        elapsed_time = time.time() - start_time
+        logging.info(
+            f"Upserted {len(df)} rows to {table_data.table.__tablename__} in {elapsed_time:.2f}s"
+        )
+
+
+def _prepare_df_for_insert(table_data: TableData) -> pd.DataFrame:
+    """
+    Prepare dataframe for database insert/update by:
+    1. Return columns common to both dataframe and table
+    2. Converting dataframe datatypes to match DB types
+    """
+    # Get intersection of dataframe and table columns:
+    # Start with table columns, then remove those that aren't in the dataframe
+    table_columns = table_data.table.__table__.columns.keys()
+    table_columns = [col for col in table_columns if col in table_data.df.columns]
+
+    # Convert dataframe datatypes to match DB types
+    _convert_df_dtypes_to_db(table_data, table_columns)
+
+    return table_data.df[table_columns]
 
 
 def _convert_df_dtypes_to_db(table_data: TableData, table_columns: List[str]):
