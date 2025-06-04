@@ -155,12 +155,18 @@ def upsert_data(
         for i in range(0, len(df), chunk_size):
             chunk = df.iloc[i : i + chunk_size]
 
-            # Get existing records by primary key
-            existing_pks = session.exec(
-                select(getattr(table_data.table, pk_col)).where(
-                    getattr(table_data.table, pk_col).in_(chunk[pk_col].tolist())
-                )
-            ).all()
+            # Get existing records by primary key. Split primary keys into
+            # smaller chunks as needed for SQL Server parameter limit
+            pk_chunk_size = 1000
+            existing_pks = []
+            for i in range(0, len(chunk[pk_col]), pk_chunk_size):
+                pk_chunk = chunk[pk_col].iloc[i : i + pk_chunk_size].tolist()
+                chunk_pks = session.exec(
+                    select(getattr(table_data.table, pk_col)).where(
+                        getattr(table_data.table, pk_col).in_(pk_chunk)
+                    )
+                ).all()
+                existing_pks.extend(chunk_pks)
 
             # Split into inserts and updates
             to_insert = chunk[~chunk[pk_col].isin(existing_pks)]
