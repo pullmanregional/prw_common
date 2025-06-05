@@ -109,6 +109,7 @@ class PrwCharges(PrwModel, table=True):
         primary_key=True,
         sa_type=BigInteger,
         description="Equal to BillingTransactionFact.BillingTransactionKey",
+        sa_column_kwargs={"autoincrement": False},
     )
     prw_id: str | None = Field(index=True, max_length=24)
     service_date: datetime | None = None
