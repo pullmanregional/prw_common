@@ -153,6 +153,7 @@ def upsert_data(
 
         # Process in chunks to avoid memory issues
         for i in range(0, len(df), chunk_size):
+            logging.info(f"Writing rows {i+1}-{i + chunk_size}/{len(df)}")
             chunk = df.iloc[i : i + chunk_size]
 
             # Get existing records by primary key. Split primary keys into
