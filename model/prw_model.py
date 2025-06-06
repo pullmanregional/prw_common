@@ -117,6 +117,7 @@ class PrwCharges(PrwModel, table=True):
     billing_provider: str | None = None
     procedure_code: str | None = None
     modifiers: str | None = None
+    quantity: int | None = None
     procedure_desc: str | None = None
     rev_code: str | None = None
     rev_code_desc: str | None = None
