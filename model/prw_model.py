@@ -124,6 +124,7 @@ class PrwCharges(PrwModel, table=True):
     rev_code: str | None = None
     rev_code_desc: str | None = None
     wrvu: float | None = None
+    trvu: float | None = None
     reversal_reason: str | None = None
     charge_amount: float | None = None
     is_inactive: bool | None = None
