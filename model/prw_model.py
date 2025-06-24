@@ -112,7 +112,7 @@ class PrwCharges(PrwModel, table=True):
         sa_column_kwargs={"autoincrement": False},
     )
     prw_id: str | None = Field(index=True, max_length=24)
-    encounter_csn: int | None = None
+    encounter_csn: str | None = None
     service_date: datetime | None = None
     post_date: datetime | None = None
     billing_provider: str | None = None
