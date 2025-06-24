@@ -112,9 +112,11 @@ class PrwCharges(PrwModel, table=True):
         sa_column_kwargs={"autoincrement": False},
     )
     prw_id: str | None = Field(index=True, max_length=24)
+    encounter_csn: int | None = None
     service_date: datetime | None = None
     post_date: datetime | None = None
     billing_provider: str | None = None
+    posting_user: str | None = None
     procedure_code: str | None = None
     modifiers: str | None = None
     quantity: int | None = None
@@ -124,6 +126,7 @@ class PrwCharges(PrwModel, table=True):
     wrvu: float | None = None
     reversal_reason: str | None = None
     charge_amount: float | None = None
+    is_inactive: bool | None = None
     primary_payor_class: str | None = None
     dept: str | None = None
     location: str | None = None
