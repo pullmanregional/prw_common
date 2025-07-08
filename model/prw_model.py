@@ -131,3 +131,19 @@ class PrwCharges(PrwModel, table=True):
     primary_payor_class: str | None = None
     dept: str | None = None
     location: str | None = None
+
+
+class PrwImaging(PrwModel, table=True):
+    __tablename__ = "prw_imaging"
+
+    id: int | None = Field(default=None, primary_key=True)
+    imaging_key: int = Field(
+        sa_type=BigInteger,
+        description="Equal to ImagingFact.ImagingKey",
+    )
+
+    dept: str
+    scheduled_date: datetime | None = None
+    service_date: datetime | None = None
+    modality: str | None = None
+    study_status: str | None = None
