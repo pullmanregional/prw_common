@@ -151,23 +151,17 @@ def upsert_data(
         start_time = time.time()
         logging.info(f"Upserting table: {table_data.table.__tablename__}")
 
+        # Get all existing primary key values
+        existing_pks = session.exec(select(getattr(table_data.table, pk_col))).all()
+
+        # Make sure there are no duplicate primary keys in the dataframe
+        if df[pk_col].duplicated().any():
+            raise ValueError(f"Duplicate primary keys found in dataframe: {pk_col}")
+
         # Process in chunks to avoid memory issues
         for i in range(0, len(df), chunk_size):
             logging.info(f"Writing rows {i+1}-{i + chunk_size}/{len(df)}")
             chunk = df.iloc[i : i + chunk_size]
-
-            # Get existing records by primary key. Split primary keys into
-            # smaller chunks as needed for SQL Server parameter limit
-            pk_chunk_size = 1000
-            existing_pks = []
-            for i in range(0, len(chunk[pk_col]), pk_chunk_size):
-                pk_chunk = chunk[pk_col].iloc[i : i + pk_chunk_size].tolist()
-                chunk_pks = session.exec(
-                    select(getattr(table_data.table, pk_col)).where(
-                        getattr(table_data.table, pk_col).in_(pk_chunk)
-                    )
-                ).all()
-                existing_pks.extend(chunk_pks)
 
             # Split into inserts and updates
             to_insert = chunk[~chunk[pk_col].isin(existing_pks)]
