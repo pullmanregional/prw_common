@@ -225,7 +225,8 @@ def _convert_df_dtypes_to_db(table_data: TableData, table_columns: List[str]):
                 # Use pandas nullable integer type if there are NaNs
                 target_dtype = "Int64" if df[col].isna().any() else "int64"
             elif isinstance(sa_column.type, sqlalchemy.Float):
-                target_dtype = "float64"
+                # Use pandas nullable type if there are NaNs
+                target_dtype = "Float64" if df[col].isna().any() else "float64"
             elif isinstance(sa_column.type, sqlalchemy.DateTime) or isinstance(
                 sa_column.type, sqlalchemy.Date
             ):
