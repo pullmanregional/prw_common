@@ -19,6 +19,19 @@ class PrwVolume(PrwFinanceModel, table=True):
     unit: Optional[str] = None
 
 
+class PrwMiscVolume(PrwFinanceModel, table=True):
+    """
+    Contains miscellaneous volumes that are not yet captured by ingested Epic data. This table
+    is temporary and will beremoved once the source rows (eg. pharmacy dispenses) are available.
+    """
+
+    __tablename__ = "prw_volumes_misc"
+    id: Optional[int] = Field(default=None, primary_key=True)
+    month: str = Field(max_length=7)
+    metric: str = Field(max_length=32)
+    volume: int
+
+
 class PrwUOS(PrwFinanceModel, table=True):
     __tablename__ = "prw_uos"
     id: Optional[int] = Field(default=None, primary_key=True)
