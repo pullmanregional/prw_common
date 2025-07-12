@@ -54,6 +54,35 @@ class PrwEncounterOutpt(PrwModel, table=True):
     level_of_service: str | None = None
 
 
+class PrwEncounterInpt(PrwModel, table=True):
+    __tablename__ = "prw_encounters_inpt"
+
+    id: int | None = Field(default=None, primary_key=True)
+    prw_id: str = Field(index=True, max_length=24)
+    admission_date: datetime | None = None
+    discharge_date: datetime | None = None
+    diagnosis: str | None = None
+    dept: str | None = None
+
+
+class PrwEncounterEd(PrwModel, table=True):
+    __tablename__ = "prw_encounters_ed"
+
+    id: int | None = Field(default=None, primary_key=True)
+    prw_id: str = Field(index=True, max_length=24)
+    arrival_date: datetime
+    arrival_time: str = Field(
+        max_length=4, description="Time of encounter as HHSS in 24-hour format"
+    )
+    departure_date: datetime
+    departure_time: str = Field(max_length=4)
+    encounter_age: int | None = Field(description="Age in years at encounter")
+    chief_complaint: str | None = None
+    diagnosis: str | None = None
+    first_attending: str | None = None
+    last_attending: str | None = None
+
+
 class PrwNotesInpt(PrwModel, table=True):
     __tablename__ = "prw_notes_inpt"
 
