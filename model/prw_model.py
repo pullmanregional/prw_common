@@ -70,12 +70,12 @@ class PrwEncounterEd(PrwModel, table=True):
 
     id: int | None = Field(default=None, primary_key=True)
     prw_id: str = Field(index=True, max_length=24)
-    arrival_date: datetime
-    arrival_time: str = Field(
+    arrival_date: datetime | None = None
+    arrival_time: str | None = Field(
         max_length=4, description="Time of encounter as HHSS in 24-hour format"
     )
-    departure_date: datetime
-    departure_time: str = Field(max_length=4)
+    departure_date: datetime | None = None
+    departure_time: str | None = Field(max_length=4)
     encounter_age: int | None = Field(description="Age in years at encounter")
     chief_complaint: str | None = None
     diagnosis: str | None = None
