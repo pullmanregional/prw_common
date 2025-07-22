@@ -241,8 +241,7 @@ def _convert_df_dtypes_to_db(table_data: TableData, table_columns: List[str]):
                 logging.info(
                     f"Converting column {col} from {current_dtype} to {target_dtype}"
                 )
-                # Can use .copy() to avoid SettingWithCopyWarning
-                df[col] = df[col].astype(target_dtype, copy=False)
+                df.loc[:, col] = df[col].astype(target_dtype, copy=False)
 
 
 def write_kv_table(kv_data: dict, session: Session, kv_table: SQLModel):
