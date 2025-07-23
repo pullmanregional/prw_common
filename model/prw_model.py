@@ -28,6 +28,7 @@ class PrwPatient(PrwModel, table=True):
     pcp: str | None = None
 
     allergy: str | None = None
+    problem_list: str | None = None
 
 
 class PrwEncounterOutpt(PrwModel, table=True):
