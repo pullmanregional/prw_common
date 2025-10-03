@@ -107,7 +107,7 @@ class PrwIncomeStmt(PrwFinanceModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     month: str = Field(max_length=7)
     ledger_acct: str
-    dept_wd_id: str = Field(max_length=10)
+    dept_wd_id: str = Field(max_length=48)
     dept_name: Optional[str] = None
     spend_category: Optional[str] = None
     revenue_category: Optional[str] = None
