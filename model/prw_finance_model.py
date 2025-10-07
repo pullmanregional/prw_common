@@ -115,3 +115,18 @@ class PrwIncomeStmt(PrwFinanceModel, table=True):
     budget: float
     actual_ytd: float
     budget_ytd: float
+
+
+class PrwAgedAR(PrwFinanceModel, table=True):
+    __tablename__ = "prw_aged_ar"
+    id: Optional[int] = Field(default=None, primary_key=True)
+    date: str = Field(
+        max_length=10,
+        description="Date that this AR metric was calculated in format YYYY-MM-DD",
+    )
+    aged_days: str = Field(
+        max_length=10,
+        description="Age bucket in days (eg '1-30') since patient's discharge date.",
+    )
+    total: float
+    num_accts: int
