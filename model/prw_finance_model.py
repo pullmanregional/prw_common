@@ -131,6 +131,8 @@ class PrwBalanceSheet(PrwFinanceModel, table=True):
         description="Line item in the balance sheet, eg 'Cash and Short Term Investments' or '10405:Patient Refunds'"
     )
     actual: float | None
+    actual_prev_month: float | None
+    actual_prev_year: float | None
 
 
 class PrwAgedAR(PrwFinanceModel, table=True):
