@@ -117,6 +117,22 @@ class PrwIncomeStmt(PrwFinanceModel, table=True):
     budget_ytd: float
 
 
+class PrwBalanceSheet(PrwFinanceModel, table=True):
+    __tablename__ = "prw_balance_sheet"
+    id: Optional[int] = Field(default=None, primary_key=True)
+    month: str = Field(max_length=7)
+    tree: str = Field(
+        description="Tree path for this line item, with levels separated by '|', which forms a hierarchy for line items in balance sheet"
+    )
+    line_num: int = Field(
+        description="Line number for this line item that represents the placement of this line in the balance sheet. Items in a given month with always have contiguous line numbers."
+    )
+    ledger_acct: str = Field(
+        description="Line item in the balance sheet, eg 'Cash and Short Term Investments' or '10405:Patient Refunds'"
+    )
+    actual: float | None
+
+
 class PrwAgedAR(PrwFinanceModel, table=True):
     __tablename__ = "prw_aged_ar"
     id: Optional[int] = Field(default=None, primary_key=True)
