@@ -71,20 +71,21 @@ class PrwHours(PrwFinanceModel, table=True):
     total_fte: float
 
 
-class PrwContractedHoursMeta(PrwFinanceModel, table=True):
-    __tablename__ = "prw_contracted_hours_meta"
-    id: Optional[int] = Field(default=None, primary_key=True)
-    contracted_hours_updated_month: str
-
-
 class PrwContractedHours(PrwFinanceModel, table=True):
     __tablename__ = "prw_contracted_hours"
     id: Optional[int] = Field(default=None, primary_key=True)
     dept_wd_id: str = Field(max_length=10)
     dept_name: Optional[str] = None
-    year: int
-    hrs: Optional[float] = None
-    ttl_dept_hrs: float
+    month: str = Field(max_length=7)
+    name: str = Field(description="Name of employee")
+    type: str = Field(description="License of employee, eg. RN, MD, imaging, etc")
+    reg_hrs: Optional[float] = None
+    overtime_hrs: Optional[float] = None
+    call_hrs: Optional[float] = None
+    holiday_hrs: Optional[float] = None
+    callback_hrs: Optional[float] = None
+    other_hrs: Optional[float] = None
+    total_hrs: Optional[float] = None
 
 
 class PrwHoursByPayPeriod(PrwFinanceModel, table=True):
