@@ -100,6 +100,7 @@ def clear_tables_and_insert_data(
             inspector = inspect(session.bind)
             if inspector.has_table(table_data.table.__tablename__):
                 session.exec(delete(table_data.table))
+                session.commit()
         except Exception as e:
             logging.warning(
                 f"WARN: failed to clear table: {table_data.table.__tablename__}", e
@@ -123,6 +124,7 @@ def clear_tables_and_insert_data(
             index=False,
             chunksize=chunk_size,
         )
+        session.commit()
         elapsed_time = time.time() - start_time
         logging.info(
             f"Wrote {len(df)} rows to {table_data.table.__tablename__} in {elapsed_time:.2f}s"
@@ -203,9 +205,9 @@ def _prepare_df_for_insert(table_data: TableData) -> pd.DataFrame:
     table_columns = [col for col in table_columns if col in table_data.df.columns]
 
     # Convert dataframe datatypes to match DB types
-    _convert_df_dtypes_to_db(table_data, table_columns)
+    df = _convert_df_dtypes_to_db(table_data, table_columns)
 
-    return table_data.df[table_columns]
+    return df[table_columns]
 
 
 def _convert_df_dtypes_to_db(table_data: TableData, table_columns: List[str]):
@@ -213,7 +215,7 @@ def _convert_df_dtypes_to_db(table_data: TableData, table_columns: List[str]):
     Convert dataframe columns to match database column types by
     mapping SQLAlchemy types to pandas-compatible dtypes
     """
-    df = table_data.df
+    df = table_data.df.copy()
     for col in table_columns:
         if col in df.columns:
             sa_column = table_data.table.__table__.columns[col]
@@ -241,7 +243,9 @@ def _convert_df_dtypes_to_db(table_data: TableData, table_columns: List[str]):
                 logging.info(
                     f"Converting column {col} from {current_dtype} to {target_dtype}"
                 )
-                df.loc[:, col] = df[col].astype(target_dtype, copy=False)
+                df[col] = df[col].astype(target_dtype, copy=False)
+
+    return df
 
 
 def write_kv_table(kv_data: dict, session: Session, kv_table: SQLModel):
